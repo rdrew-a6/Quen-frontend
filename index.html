@@ -19,9 +19,9 @@
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      width: 300px;
     }
     input, select, button {
-      display: block;
       width: 100%;
       margin-bottom: 1rem;
       padding: 10px;
@@ -55,7 +55,7 @@
       <option value="female">Female</option>
       <option value="male">Male</option>
     </select>
-    <label>
+    <label style="display:block; margin-bottom: 1rem;">
       <input type="checkbox" id="is_creator" />
       Are you a creator?
     </label>
@@ -71,35 +71,27 @@
       const gender = document.getElementById("gender").value;
       const is_creator = document.getElementById("is_creator").checked;
 
-      const message = document.getElementById("message");
-      message.textContent = "Loading...";
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = "Please wait...";
 
       try {
         const res = await fetch("https://quen.onrender.com/signup", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            gender,
-            is_creator
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, gender, is_creator })
         });
 
         const data = await res.json();
-
         if (res.ok) {
-          message.textContent = "Signup successful!";
-          message.style.color = "lightgreen";
+          messageDiv.style.color = "lightgreen";
+          messageDiv.textContent = data.message || "Signup successful!";
         } else {
-          message.textContent = data.error || "Signup failed.";
-          message.style.color = "red";
+          messageDiv.style.color = "red";
+          messageDiv.textContent = data.error || "Signup failed.";
         }
-      } catch (error) {
-        message.textContent = "Network error.";
-        message.style.color = "red";
+      } catch (err) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Something went wrong.";
       }
     });
   </script>
