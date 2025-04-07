@@ -38,6 +38,10 @@
       text-align: center;
       margin-bottom: 1rem;
     }
+    #message {
+      text-align: center;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -67,5 +71,38 @@
       const gender = document.getElementById("gender").value;
       const is_creator = document.getElementById("is_creator").checked;
 
+      const message = document.getElementById("message");
+      message.textContent = "Loading...";
+
       try {
-        const res =
+        const res = await fetch("https://quen.onrender.com/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            gender,
+            is_creator
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          message.textContent = "Signup successful!";
+          message.style.color = "lightgreen";
+        } else {
+          message.textContent = data.error || "Signup failed.";
+          message.style.color = "red";
+        }
+      } catch (error) {
+        message.textContent = "Network error.";
+        message.style.color = "red";
+      }
+    });
+  </script>
+
+</body>
+</html>
